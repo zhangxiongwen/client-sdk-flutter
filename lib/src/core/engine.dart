@@ -15,6 +15,7 @@
 // ignore_for_file: deprecated_member_use_from_same_package
 
 import 'dart:async';
+import 'dart:io' as io;
 
 import 'package:flutter/foundation.dart' hide internal;
 
@@ -103,6 +104,7 @@ class Engine extends Disposable with EventsEmittable<EngineEvent> {
   late ConnectOptions connectOptions;
   RoomOptions roomOptions;
   FastConnectOptions? fastConnectOptions;
+  io.HttpClient? customWebsocketClient;
 
   bool _subscriberPrimary = false;
 
@@ -172,6 +174,7 @@ class Engine extends Disposable with EventsEmittable<EngineEvent> {
     SignalClient? signalClient,
     PeerConnectionCreate? peerConnectionCreate,
     E2EEManager? e2eeManager,
+    this.customWebsocketClient,
   })  : signalClient = signalClient ?? SignalClient(LiveKitWebSocket.connect),
         _peerConnectionCreate = peerConnectionCreate ?? rtc.createPeerConnection,
         _e2eeManager = e2eeManager {
@@ -220,6 +223,7 @@ class Engine extends Disposable with EventsEmittable<EngineEvent> {
         token,
         connectOptions: this.connectOptions,
         roomOptions: this.roomOptions,
+        customClient: customWebsocketClient,
       );
 
       // wait for join response
@@ -931,6 +935,7 @@ class Engine extends Disposable with EventsEmittable<EngineEvent> {
       connectOptions: connectOptions,
       roomOptions: roomOptions,
       reconnect: true,
+      customClient: customWebsocketClient
     );
 
     await events.waitFor<SignalReconnectedEvent>(

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:io' as io;
+
 import '../support/disposable.dart';
 import 'websocket/io.dart' if (dart.library.js_interop) 'websocket/web.dart';
 
@@ -37,11 +39,11 @@ class WebSocketEventHandlers {
   });
 }
 
-typedef WebSocketConnector = Future<LiveKitWebSocket> Function(Uri uri, [WebSocketEventHandlers? options]);
+typedef WebSocketConnector = Future<LiveKitWebSocket> Function(Uri uri, io.HttpClient? customWebsocketClient, [WebSocketEventHandlers? options]);
 
 abstract class LiveKitWebSocket extends Disposable {
   void send(List<int> data);
 
-  static Future<LiveKitWebSocket> connect(Uri uri, [WebSocketEventHandlers? options]) =>
-      lkWebSocketConnect(uri, options);
+  static Future<LiveKitWebSocket> connect(Uri uri, io.HttpClient? customClient, [WebSocketEventHandlers? options]) =>
+      lkWebSocketConnect(uri, customClient, options);
 }

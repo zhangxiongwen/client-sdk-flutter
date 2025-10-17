@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import 'dart:async';
+import 'dart:io' as io;
 
 import 'package:flutter/foundation.dart' hide internal;
 
@@ -146,9 +147,11 @@ class Room extends DisposableChangeNotifier with EventsEmittable<RoomEvent> {
     ConnectOptions connectOptions = const ConnectOptions(),
     RoomOptions roomOptions = const RoomOptions(),
     Engine? engine,
+    io.HttpClient? customWebsocketClient,
   }) : engine = engine ??
             Engine(
               roomOptions: roomOptions,
+              customWebsocketClient: customWebsocketClient,
             ) {
     //
     _engineListener = this.engine.createListener();

@@ -14,6 +14,7 @@
 
 import 'dart:async';
 import 'dart:collection';
+import 'dart:io' as io;
 
 import 'package:flutter/foundation.dart' hide internal;
 
@@ -93,6 +94,7 @@ class SignalClient extends Disposable with EventsEmittable<SignalEvent> {
     required ConnectOptions connectOptions,
     required RoomOptions roomOptions,
     bool reconnect = false,
+    io.HttpClient? customClient,
   }) async {
     if (!kIsWeb && !lkPlatformIsTest()) {
       _connectivityResult = await Connectivity().checkConnectivity();
@@ -142,6 +144,7 @@ class SignalClient extends Disposable with EventsEmittable<SignalEvent> {
       // Attempt to connect
       var future = _wsConnector(
         rtcUri,
+        customClient,
         WebSocketEventHandlers(
           onData: _onSocketData,
           onDispose: _onSocketDispose,
